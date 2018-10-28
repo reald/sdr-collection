@@ -1129,7 +1129,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>/home/real/lager/amateurfunk/funkdienste/vor/data/vor-ostwind-f1.157500e+08-s9.600000e+04-t20181024163438.cfile</value>
+      <value>/tmp/vor_96khz.cfile</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1157,7 +1157,7 @@
     </param>
     <param>
       <key>repeat</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>vlen</key>
