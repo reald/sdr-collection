@@ -5,7 +5,8 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: ''
+    description: SSB Modulation using Hilbert transform. LSB and USB are supported,
+      unused ports can be left open.
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: hb
@@ -46,7 +47,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [136, 148.0]
+    coordinate: [456, 12.0]
     rotation: 0
     state: true
 - name: blocks_add_xx_0
@@ -385,7 +386,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 148.0]
+    coordinate: [344, 12.0]
     rotation: 0
     state: true
 

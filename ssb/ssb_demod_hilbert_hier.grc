@@ -5,7 +5,8 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: ''
+    description: SSB Demodulation using Hilbert transform. LSB and USB are supported,
+      unused ports can be left open.
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: hb
@@ -46,7 +47,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [136, 148.0]
+    coordinate: [992, 20.0]
     rotation: 0
     state: true
 - name: blocks_add_xx_0
@@ -215,7 +216,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 260.0]
+    coordinate: [864, 132.0]
     rotation: 0
     state: true
 - name: high_pass_filter_0
@@ -280,7 +281,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 260.0]
+    coordinate: [1040, 132.0]
     rotation: 0
     state: true
 - name: hilbert_fc_0
@@ -333,7 +334,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 12.0]
+    coordinate: [1120, 20.0]
     rotation: 0
     state: true
 - name: pad_sink_0
@@ -446,7 +447,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 148.0]
+    coordinate: [864, 20.0]
     rotation: 0
     state: true
 

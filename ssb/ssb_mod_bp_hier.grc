@@ -5,7 +5,8 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: ''
+    description: SSB Modulation using complex bandpasses. LSB and USB are supported,
+      unused ports can be left open.
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: hb
@@ -46,7 +47,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [136, 148.0]
+    coordinate: [312, 12.0]
     rotation: 0
     state: true
 - name: band_pass_filter_0_0
@@ -203,7 +204,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 260.0]
+    coordinate: [360, 124.0]
     rotation: 0
     state: true
 - name: bp_lo_cutoff
@@ -220,7 +221,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 260.0]
+    coordinate: [184, 124.0]
     rotation: 0
     state: true
 - name: bp_transistionw
@@ -237,7 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 260.0]
+    coordinate: [520, 124.0]
     rotation: 0
     state: true
 - name: pad_sink_0
@@ -352,7 +353,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 148.0]
+    coordinate: [184, 12.0]
     rotation: 0
     state: true
 

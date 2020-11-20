@@ -5,7 +5,8 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: ''
+    description: SSB Demodulation using complex bandpasses. LSB and USB are supported,
+      unused ports can be left open.
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: hb
@@ -46,7 +47,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [136, 148.0]
+    coordinate: [320, 12.0]
     rotation: 0
     state: true
 - name: band_pass_filter_0_0
@@ -71,7 +72,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 388.0]
+    coordinate: [392, 284.0]
     rotation: 0
     state: enabled
 - name: band_pass_filter_0_0_0
@@ -96,7 +97,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 572.0]
+    coordinate: [392, 476.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_imag_0
@@ -112,7 +113,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [648, 512.0]
+    coordinate: [648, 408.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_imag_0_0
@@ -128,7 +129,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 696.0]
+    coordinate: [656, 600.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_real_0
@@ -144,7 +145,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 632.0]
+    coordinate: [656, 536.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_real_0_0
@@ -160,7 +161,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [648, 448.0]
+    coordinate: [648, 344.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_0
@@ -177,7 +178,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 696.0]
+    coordinate: [832, 600.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_0_0
@@ -194,7 +195,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 512.0]
+    coordinate: [824, 408.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_1
@@ -211,7 +212,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 688.0]
+    coordinate: [1168, 584.0]
     rotation: 0
     state: true
 - name: blocks_null_sink_1_0
@@ -228,7 +229,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 504.0]
+    coordinate: [1168, 408.0]
     rotation: 0
     state: true
 - name: bp_hi_cutoff
@@ -245,7 +246,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 252.0]
+    coordinate: [352, 108.0]
     rotation: 0
     state: true
 - name: bp_lo_cutoff
@@ -262,7 +263,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 252.0]
+    coordinate: [192, 108.0]
     rotation: 0
     state: true
 - name: bp_transistionw
@@ -279,7 +280,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 252.0]
+    coordinate: [512, 108.0]
     rotation: 0
     state: true
 - name: numhilberttaps
@@ -296,7 +297,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 12.0]
+    coordinate: [440, 12.0]
     rotation: 0
     state: true
 - name: pad_sink_0
@@ -314,7 +315,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 444.0]
+    coordinate: [1168, 340.0]
     rotation: 0
     state: true
 - name: pad_sink_1
@@ -332,7 +333,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 628.0]
+    coordinate: [1168, 532.0]
     rotation: 0
     state: true
 - name: pad_source_1
@@ -352,7 +353,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 516.0]
+    coordinate: [80, 420.0]
     rotation: 0
     state: true
 - name: rational_resampler_xxx_0
@@ -372,7 +373,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [968, 604.0]
+    coordinate: [968, 508.0]
     rotation: 0
     state: enabled
 - name: rational_resampler_xxx_0_0
@@ -392,7 +393,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [960, 420.0]
+    coordinate: [960, 316.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -409,7 +410,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 148.0]
+    coordinate: [192, 12.0]
     rotation: 0
     state: true
 
