@@ -1,4 +1,4 @@
-# Satellite Doppler Freqeuncy Shift correction
+# Satellite Doppler Frequency Shift Correction
 
 Correct satellite doppler frequency shift.
 
