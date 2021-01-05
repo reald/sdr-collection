@@ -25,3 +25,5 @@ time of record (format '2021-01-02 08:09:15') and timezone for it
     * Method 1 predicts doppler frequency and uses external
       multiplication to correct doppler shift
     * Method 2 corrects doppler shift internally by using phase rotator
+
+![Doppler frequency correction](sat_doppler_corr_example.png?raw=true "Doppler frequency correction")
