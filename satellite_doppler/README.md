@@ -18,16 +18,10 @@ time of record (format '2021-01-02 08:09:15') and timezone for it
 (e.g. 'Europe/Berlin').
 
 
-## Installation:
-
-Run hier block once in gnuradio-companion to install. After "Reload Blocks" or restart
-of gnuradio-companion they will appear under "GRC Hier Blocks".
-
-
 ## Flow graphs for gnuradio-companion:
 
-* sat_doppler_corr_hier.grc
-  * Satellite Doppler Frequency Shift Correction
-
 * sat_doppler_corr_example.grc
-  * Example using Hier Block
+  * Two methods implemented in embedded python blocks:
+    * Method 1 predicts doppler frequency and uses external
+      multiplication to correct doppler shift
+    * Method 2 corrects doppler shift internally by using phase rotator

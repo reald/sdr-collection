@@ -44,6 +44,28 @@ blocks:
     coordinate: [184, 12]
     rotation: 0
     state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: Correction frequency will be set by message
+    freq: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 292.0]
+    rotation: 0
+    state: enabled
 - name: blocks_file_sink_0
   id: blocks_file_sink
   parameters:
@@ -51,7 +73,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: /tmp/korrekturverlauf_korrigiert_hier.cfile
+    file: /tmp/sat_signal_doppler_fix1.cfile
     type: complex
     unbuffered: 'False'
     vlen: '1'
@@ -59,9 +81,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 268.0]
+    coordinate: [1120, 236.0]
     rotation: 0
-    state: true
+    state: enabled
+- name: blocks_file_sink_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /tmp/sat_signal_doppler_fix2.cfile
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [816, 716.0]
+    rotation: 0
+    state: enabled
 - name: blocks_file_source_0
   id: blocks_file_source
   parameters:
@@ -69,27 +109,45 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /tmp/korrekturverlauf.cfile
+    file: /tmp/satellite_signal.cfile
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
-    repeat: 'True'
+    repeat: 'False'
     type: complex
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 252.0]
+    coordinate: [48, 380.0]
     rotation: 0
     state: true
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Doppler Shift Correction
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 240.0]
+    rotation: 0
+    state: enabled
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: May be faster than real time
     ignoretag: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -100,7 +158,349 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 284.0]
+    coordinate: [240, 412.0]
+    rotation: 0
+    state: true
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nfrom gnuradio import blocks\n\nimport pmt\n\nfrom orbit_predictor.sources\
+      \ import EtcTLESource\nimport orbit_predictor.locations\nimport datetime\nimport\
+      \ pytz\n\n\nclass blk(gr.sync_block):  # other base classes are basic_block,\
+      \ decim_block, interp_block\n    \"\"\"Embedded Python Block example - a simple\
+      \ multiply const\"\"\"\n\n    def __init__(self, samp_rate=1e6,\n          \
+      \       rx_freq=145.8e6,\n                 loc_name='Nuernberg', loc_lat=49.478,\
+      \ loc_lon=11.069, loc_height_m=315, \n                 tle_file='/home/real/iss.txt',\
+      \ sat_name='ISS (ZARYA)',\n                 start_time='2021-01-01 00:00:00',\n\
+      \                 time_zone='Europe/Berlin',\n                 print_debug=1):\n\
+      \        \"\"\"arguments to this function show up as parameters in GRC\"\"\"\
+      \n\n        gr.sync_block.__init__(\n            self,\n            name='Satellite\
+      \ Doppler Shift Correction',   # will show up in GRC\n            in_sig=[np.complex64],\n\
+      \            out_sig=[np.complex64]\n        )\n        \n        \n       \
+      \ # if an attribute with the same name as a parameter is found,\n        # a\
+      \ callback is registered (properties work, too).\n\n        print(\"*** Satellite\
+      \ Doppler Frequency Shift Correction ***\")\n        \n        # sample rate\n\
+      \        self.samp_rate = samp_rate\n        \n        # rx frequency\n    \
+      \    self.rx_freq = rx_freq\n        \n        # location\n        self.loc_name\
+      \ = loc_name\n        self.loc_lat = loc_lat\n        self.loc_lon = loc_lon\n\
+      \        self.loc_height_m = loc_height_m\n        self.location = orbit_predictor.locations.Location(self.loc_name,\
+      \ self.loc_lat, self.loc_lon, self.loc_height_m)\n        \n        # read iss\
+      \ tle\n        self.tle_file = tle_file\n        self.tlesource = EtcTLESource(filename=self.tle_file)\n\
+      \n        # sat predictor\n        self.sat_name = sat_name\n        print(\"\
+      Satellite: \" + self.sat_name)\n        self.satpredictor = self.tlesource.get_predictor(self.sat_name)\n\
+      \        \n        # destination timezone\n        try:\n           self.time_zone\
+      \ = pytz.timezone(time_zone)\n        except:\n           print(\"WARNING: Invalid\
+      \ time zone. Assuming UTC.\")\n           self.time_zone = pytz.timezone('UTC')\n\
+      \        \n        self.time_zone_utc = pytz.timezone('UTC')\n        \n   \
+      \     # start time\n        try:\n           self.start_time = datetime.datetime.strptime(start_time,\
+      \ '%Y-%m-%d %H:%M:%S')\n           self.start_time = self.time_zone.localize(self.start_time)\n\
+      \        except:\n           print(\"WARNING: No valid start time given. Use\
+      \ now()\")\n           self.start_time = datetime.datetime.now(self.time_zone)\n\
+      \n        self.current_time_utc = self.start_time.astimezone(self.time_zone_utc)\n\
+      \        print(\"Start Time: \" + str(self.current_time_utc.astimezone(self.time_zone))\
+      \ + \" (\" + str(self.time_zone) + \")\" )\n           \n        self.print_debug\
+      \ = print_debug\n\n        # other variables\n        self.num_delta_samples\
+      \ = 0\n        \n        # rotator\n        self.rotcnt = 0\n        self.rotphase\
+      \ = 1 + 0j\n        self.rotphaseinc = 1 + 0j\n\n        # get next pass\n \
+      \       # sat predictor input expects utc time zone!\n        predicted_pass\
+      \ = self.satpredictor.get_next_pass(self.location, self.current_time_utc, max_elevation_gt\
+      \ = 0)\n\n        print(\"Next pass of {0} / AOS: {1} ({2}) / LOS: {3} ({4})\
+      \ / Duration: {5:.2f} s / Max Elevation: {6:.1f} deg\".format(\n           \
+      \      self.sat_name,\n                 predicted_pass.aos.astimezone(self.time_zone),\
+      \ # output in local timezone\n                 self.time_zone,\n           \
+      \      predicted_pass.los.astimezone(self.time_zone), # output in local timezone\n\
+      \                 self.time_zone,\n                 predicted_pass.duration_s,\n\
+      \                 predicted_pass.max_elevation_deg                 \n      \
+      \           ) \n             )\n        print(\"\")\n\n\n\n    def get_sat_elev_azim(self,\
+      \ sat_position):\n       \"\"\" get elevation and azimuth on our location to\
+      \ sat at its position \"\"\"\n       \n       [azim, elev] = self.location.get_azimuth_elev_deg(\
+      \ sat_position )\n       \n       return [elev, azim]\n\n\n\n    def get_doppler_factor(self,\
+      \ sat_position):\n       \"\"\" get doppler factor \"\"\"\n       \n       return\
+      \ self.location.doppler_factor( sat_position )\n\n\n\n    def get_doppler_shift(self,\
+      \ sat_position, freq):\n       \"\"\" get doppler frequency \"\"\"\n       \n\
+      \       return round(freq - self.location.doppler_factor( sat_position ) * freq)\n\
+      \n\n\n    def get_sat_distance(self, sat_position_efec):\n       \"\"\" get\
+      \ distance to satellite \"\"\"\n       \n       return self.location.slant_range_km(\
+      \ sat_position_efec )\n\n\n\n    def get_sat_distance_velocity(self, sat_position):\n\
+      \       \"\"\" get distance to satellite change rate \"\"\"\n       \n     \
+      \  return self.location.slant_range_velocity_kms( sat_position )\n    \n\n\n\
+      \    def get_is_visible(self, sat_position):\n       \"\"\" is satellite visible\
+      \ from our location? \"\"\"\n       \n       return self.location.is_visible\
+      \ ( sat_position )\n\n\n\n    def set_corr_phase_inc(self, freqdev):\n     \
+      \  \"\"\" Set Phase increment \"\"\"\n       self.rotphaseinc = np.exp( complex(0,\
+      \ -(freqdev * 2* np.pi) / self.samp_rate) )\n\n       \n\n    def rotate(self,\
+      \ z):\n       \"\"\" Rotate complex number z by phase \"\"\"\n       \n    \
+      \   self.rotcnt += 1\n       \n       z = z * self.rotphase # rotate z by phase\n\
+      \       self.rotphase = self.rotphase * self.rotphaseinc # increment rotating\
+      \ phase\n       \n       if (self.rotcnt % 512) == 0:\n          # keep rotation\
+      \ vector normalized to avoid unwanted gain\n          self.rotphase = self.rotphase\
+      \ / np.abs(self.rotphase)\n       \n       return z\n    \n\n\n    def print_position_debug(self,\
+      \ sat_pos):\n       \"\"\" Print debug information for current sat position\
+      \ \"\"\"\n       \n       if ( self.print_debug != 0 and sat_pos != None ):\n\
+      \           \n          [elev, azim] = self.get_sat_elev_azim(sat_pos)\n   \
+      \        \n          print( \"{0} / Elevation: {1:.1f} deg / Azimuth: {2:.1f}\
+      \ deg / Distance: {3:.3f} km / Doppler Shift (@{4:.6f} MHz = {5} Hz / Visible:\
+      \ {6}\".format(\n                   self.current_time_utc.astimezone(self.time_zone),\n\
+      \                   elev,\n                   azim,\n                   self.get_sat_distance(sat_pos.position_ecef),\n\
+      \                   self.rx_freq/1000000,\n                   self.get_doppler_shift(sat_pos,\
+      \ self.rx_freq),\n                   self.get_is_visible(sat_pos)\n        \
+      \           ) \n                )    \n\n\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\" worker \"\"\"\n       \n        #print(self.num_delta_samples)\n\
+      \        \n        if (self.num_delta_samples == 0) or (self.num_delta_samples\
+      \ > self.samp_rate):\n           # first call or passed time > 1s since last\
+      \ call\n           \n           # calc current time\n           self.current_time_utc\
+      \ += datetime.timedelta( seconds = self.num_delta_samples/self.samp_rate )\n\
+      \           \n           # get new sat position\n           sat_pos = self.satpredictor.get_position(self.current_time_utc)\n\
+      \        \n           # set frequency correction\n           self.set_corr_phase_inc(\
+      \ self.get_doppler_shift(sat_pos, self.rx_freq) )\n\n           # print time\
+      \ and position info if debug is on\n           self.print_position_debug(sat_pos)\n\
+      \           \n           # start new 1s timer\n           self.num_delta_samples\
+      \ = 0\n           \n\n        self.num_delta_samples += len(input_items[0])\
+      \ \n\n        # fixme. what if more changes in this vector? interpolate correction?\n\
+      \        for i in range( len(input_items[0]) ):\n           output_items[0][i]\
+      \ = self.rotate(input_items[0][i])\n\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: 'Method 2:
+
+      Correction of doppler shift'
+    loc_height_m: loc_height
+    loc_lat: loc_lat
+    loc_lon: loc_lon
+    loc_name: loc_name
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    print_debug: print_debug
+    rx_freq: rx_freq
+    samp_rate: samp_rate
+    sat_name: sat_name
+    start_time: start_time
+    time_zone: time_zone
+    tle_file: tle_file
+  states:
+    _io_cache: ('Satellite Doppler Shift Correction', 'blk', [('samp_rate', '1000000.0'),
+      ('rx_freq', '145800000.0'), ('loc_name', "'Nuernberg'"), ('loc_lat', '49.478'),
+      ('loc_lon', '11.069'), ('loc_height_m', '315'), ('tle_file', "'/home/real/iss.txt'"),
+      ('sat_name', "'ISS (ZARYA)'"), ('start_time', "'2021-01-01 00:00:00'"), ('time_zone',
+      "'Europe/Berlin'"), ('print_debug', '1')], [('0', 'complex', 1)], [('0', 'complex',
+      1)], 'Embedded Python Block example - a simple multiply const', ['loc_height_m',
+      'loc_lat', 'loc_lon', 'loc_name', 'print_debug', 'rx_freq', 'samp_rate', 'sat_name',
+      'start_time', 'time_zone', 'tle_file'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 588.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nfrom gnuradio import blocks\n\nimport pmt\n\nfrom orbit_predictor.sources\
+      \ import EtcTLESource\nimport orbit_predictor.locations\nimport datetime\nimport\
+      \ pytz\n\n\nclass blk(gr.sync_block):  # other base classes are basic_block,\
+      \ decim_block, interp_block\n    \"\"\"Embedded Python Block example - a simple\
+      \ multiply const\"\"\"\n\n    def __init__(self, samp_rate=1e6,\n          \
+      \       rx_freq=145.8e6,\n                 loc_name='Nuernberg', loc_lat=49.478,\
+      \ loc_lon=11.069, loc_height_m=315, \n                 tle_file='/home/real/iss.txt',\
+      \ sat_name='ISS (ZARYA)',\n                 start_time='2021-01-01 00:00:00',\n\
+      \                 time_zone='Europe/Berlin',\n                 print_debug=1):\n\
+      \        \"\"\"arguments to this function show up as parameters in GRC\"\"\"\
+      \n\n        gr.sync_block.__init__(\n            self,\n            name='Satellite\
+      \ Doppler Shift Prediction',   # will show up in GRC\n            in_sig=[np.complex64],\n\
+      \            out_sig=[np.complex64]\n        )\n        \n        self.message_port_register_out(pmt.intern('msgfreq'))\n\
+      \        \n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n\n        print(\"\
+      *** Satellite Doppler Frequency Shift Prediction ***\")\n        \n        #\
+      \ sample rate\n        self.samp_rate = samp_rate\n        \n        # rx frequency\n\
+      \        self.rx_freq = rx_freq\n        \n        # location\n        self.loc_name\
+      \ = loc_name\n        self.loc_lat = loc_lat\n        self.loc_lon = loc_lon\n\
+      \        self.loc_height_m = loc_height_m\n        self.location = orbit_predictor.locations.Location(self.loc_name,\
+      \ self.loc_lat, self.loc_lon, self.loc_height_m)\n        \n        # read iss\
+      \ tle\n        self.tle_file = tle_file\n        self.tlesource = EtcTLESource(filename=self.tle_file)\n\
+      \n        # sat predictor\n        self.sat_name = sat_name\n        print(\"\
+      Satellite: \" + self.sat_name)\n        self.satpredictor = self.tlesource.get_predictor(self.sat_name)\n\
+      \        \n        # destination timezone\n        try:\n           self.time_zone\
+      \ = pytz.timezone(time_zone)\n        except:\n           print(\"WARNING: Invalid\
+      \ time zone. Assuming UTC.\")\n           self.time_zone = pytz.timezone('UTC')\n\
+      \        \n        self.time_zone_utc = pytz.timezone('UTC')\n        \n   \
+      \     # start time\n        try:\n           self.start_time = datetime.datetime.strptime(start_time,\
+      \ '%Y-%m-%d %H:%M:%S')\n           self.start_time = self.time_zone.localize(self.start_time)\n\
+      \        except:\n           print(\"WARNING: No valid start time given. Use\
+      \ now()\")\n           self.start_time = datetime.datetime.now(self.time_zone)\n\
+      \n        self.current_time_utc = self.start_time.astimezone(self.time_zone_utc)\n\
+      \        print(\"Start Time: \" + str(self.current_time_utc.astimezone(self.time_zone))\
+      \ + \" (\" + str(self.time_zone) + \")\" )\n\n        self.print_debug = print_debug\n\
+      \n        # other variables\n        self.num_delta_samples = 0\n        self.last_freq_corr_msg\
+      \ = 0\n\n        # get next pass\n        # sat predictor input expects utc\
+      \ time zone!\n        predicted_pass = self.satpredictor.get_next_pass(self.location,\
+      \ self.current_time_utc, max_elevation_gt = 0)\n\n        print(\"Next pass\
+      \ of {0} / AOS: {1} ({2}) / LOS: {3} ({4}) / Duration: {5:.2f} s / Max Elevation:\
+      \ {6:.1f} deg\".format(\n                 self.sat_name,\n                 predicted_pass.aos.astimezone(self.time_zone),\
+      \ # output in local timezone\n                 self.time_zone,\n           \
+      \      predicted_pass.los.astimezone(self.time_zone), # output in local timezone\n\
+      \                 self.time_zone,\n                 predicted_pass.duration_s,\n\
+      \                 predicted_pass.max_elevation_deg                 \n      \
+      \           ) \n             )\n        print(\"\")\n\n\n    def get_sat_elev_azim(self,\
+      \ sat_position):\n       \"\"\" get elevation and azimuth on our location to\
+      \ sat at its position \"\"\"\n       \n       [azim, elev] = self.location.get_azimuth_elev_deg(\
+      \ sat_position )\n       \n       return [elev, azim]\n\n\n\n    def get_doppler_factor(self,\
+      \ sat_position):\n       \"\"\" get doppler factor \"\"\"\n       \n       return\
+      \ self.location.doppler_factor( sat_position )\n\n\n\n    def get_doppler_shift(self,\
+      \ sat_position, freq):\n       \"\"\" get doppler factor \"\"\"\n       \n \
+      \      return round(freq - self.location.doppler_factor( sat_position ) * freq)\n\
+      \n\n\n    def get_sat_distance(self, sat_position_efec):\n       \"\"\" get\
+      \ distance to satellite \"\"\"\n       \n       return self.location.slant_range_km(\
+      \ sat_position_efec )\n\n\n\n    def get_sat_distance_velocity(self, sat_position):\n\
+      \       \"\"\" get distance to satellite \"\"\"\n       \n       return self.location.slant_range_velocity_kms(\
+      \ sat_position )\n    \n\n\n    def get_is_visible(self, sat_position):\n  \
+      \     \"\"\" is satellite visible from our location? \"\"\"\n       \n     \
+      \  return self.location.is_visible ( sat_position )\n\n\n\n    def print_position_debug(self,\
+      \ sat_pos):\n       \"\"\" Print debug information for current sat position\
+      \ \"\"\"\n       \n       if ( self.print_debug != 0 and sat_pos != None ):\n\
+      \           \n          [elev, azim] = self.get_sat_elev_azim(sat_pos)\n   \
+      \        \n          print( \"{0} / Elevation: {1:.1f} deg / Azimuth: {2:.1f}\
+      \ deg / Distance: {3:.3f} km / Doppler Shift (@{4:.6f} MHz = {5} Hz / Visible:\
+      \ {6}\".format(\n                   self.current_time_utc.astimezone(self.time_zone),\n\
+      \                   elev,\n                   azim,\n                   self.get_sat_distance(sat_pos.position_ecef),\n\
+      \                   self.rx_freq/1000000,\n                   self.get_doppler_shift(sat_pos,\
+      \ self.rx_freq),\n                   self.get_is_visible(sat_pos)\n        \
+      \           ) \n                )    \n\n\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\" worker \"\"\"\n       \n        #print(self.num_delta_samples)\n\
+      \n        if (self.num_delta_samples == 0) or (self.num_delta_samples > self.samp_rate):\n\
+      \           # first call or passed time > 1s since last call\n           \n\
+      \           # calc current time\n           self.current_time_utc += datetime.timedelta(\
+      \ seconds = self.num_delta_samples/self.samp_rate )\n           \n         \
+      \  # get new sat position\n           sat_pos = self.satpredictor.get_position(self.current_time_utc)\n\
+      \        \n           # send frequency correction message\n           doppler_freq_corr\
+      \ = - self.get_doppler_shift(sat_pos, self.rx_freq)\n           self.message_port_pub(pmt.intern('msgfreq'),\
+      \ pmt.cons(pmt.to_pmt(\"freq\"), pmt.from_float(doppler_freq_corr)))\n     \
+      \      self.last_freq_corr_msg = doppler_freq_corr\n\n           # print time\
+      \ and position info if debug is on\n           self.print_position_debug(sat_pos)\n\
+      \           \n           # start new 1s timer\n           self.num_delta_samples\
+      \ = 0\n\n\n        self.num_delta_samples += len(input_items[0]) \n\n      \
+      \  output_items[0][:] = input_items[0]\n        \n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: "Method 1: \nPrediction of doppler shift \nwith correction afterwards"
+    loc_height_m: loc_height
+    loc_lat: loc_lat
+    loc_lon: loc_lon
+    loc_name: loc_name
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    print_debug: '0'
+    rx_freq: rx_freq
+    samp_rate: samp_rate
+    sat_name: sat_name
+    start_time: start_time
+    time_zone: time_zone
+    tle_file: tle_file
+  states:
+    _io_cache: ('Satellite Doppler Shift Prediction', 'blk', [('samp_rate', '1000000.0'),
+      ('rx_freq', '145800000.0'), ('loc_name', "'Nuernberg'"), ('loc_lat', '49.478'),
+      ('loc_lon', '11.069'), ('loc_height_m', '315'), ('tle_file', "'/home/real/iss.txt'"),
+      ('sat_name', "'ISS (ZARYA)'"), ('start_time', "'2021-01-01 00:00:00'"), ('time_zone',
+      "'Europe/Berlin'"), ('print_debug', '1')], [('0', 'complex', 1)], [('0', 'complex',
+      1), ('msgfreq', 'message', 1)], 'Embedded Python Block example - a simple multiply
+      const', ['loc_height_m', 'loc_lat', 'loc_lon', 'loc_name', 'print_debug', 'rx_freq',
+      'samp_rate', 'sat_name', 'start_time', 'time_zone', 'tle_file'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 172.0]
+    rotation: 0
+    state: enabled
+- name: loc_height
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Location Height [m]
+    short_id: ''
+    type: ''
+    value: '315'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 20.0]
+    rotation: 0
+    state: true
+- name: loc_lat
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Location Latitude
+    short_id: ''
+    type: ''
+    value: '49.478'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 20.0]
+    rotation: 0
+    state: true
+- name: loc_lon
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Location Longitude
+    short_id: ''
+    type: ''
+    value: '11.069'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 20.0]
+    rotation: 0
+    state: true
+- name: loc_name
+  id: parameter
+  parameters:
+    alias: ''
+    comment: Receiver Location
+    hide: none
+    label: Location Name
+    short_id: ''
+    type: str
+    value: '''Nuremberg'''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 12.0]
+    rotation: 0
+    state: true
+- name: print_debug
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Print Debug Messages
+    short_id: ''
+    type: intx
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 12.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0
@@ -143,7 +543,7 @@ blocks:
     label1: Doppler correction
     label10: ''''''
     label2: Original Signal
-    label3: ''''''
+    label3: Doppler correction (rotator)
     label4: ''''''
     label5: ''''''
     label6: ''''''
@@ -154,7 +554,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     name: '""'
-    nconnections: '2'
+    nconnections: '3'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -180,42 +580,107 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 552.0]
+    coordinate: [1128, 608.0]
     rotation: 0
-    state: true
-- name: sat_doppler_corr_0
-  id: sat_doppler_corr
+    state: enabled
+- name: rx_freq
+  id: parameter
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
-    loc_height: '315'
-    loc_lat: '49.478'
-    loc_lon: '11.069'
-    loc_name: '''Nuremberg'''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    print_debug: '0'
-    rx_freq: 145.8e6
-    samp_rate: samp_rate
-    sat_name: '''ISS (ZARYA)'''
-    start_time: '''2021-01-02 08:09:15'''
-    time_zone: '''Europe/Berlin'''
-    tle_file: /tmp/iss.txt
+    hide: none
+    label: Receive Frequency
+    short_id: ''
+    type: ''
+    value: 145.8e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [424, 212.0]
+    coordinate: [288, 12.0]
+    rotation: 0
+    state: true
+- name: sat_name
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Satellite Name
+    short_id: ''
+    type: str
+    value: '''ISS (ZARYA)'''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 124.0]
+    rotation: 0
+    state: true
+- name: start_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Start Time
+    short_id: ''
+    type: str
+    value: '''2021-01-02 08:09:15'''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 228.0]
+    rotation: 0
+    state: true
+- name: time_zone
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Time Zone
+    short_id: ''
+    type: str
+    value: '''Europe/Berlin'''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [168, 228.0]
+    rotation: 0
+    state: true
+- name: tle_file
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Location of TLE file
+    short_id: ''
+    type: str
+    value: /tmp/iss.txt
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 124.0]
     rotation: 0
     state: true
 
 connections:
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0, '1']
 - [blocks_file_source_0, '0', blocks_throttle_0, '0']
+- [blocks_multiply_xx_0, '0', blocks_file_sink_0, '0']
+- [blocks_multiply_xx_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_throttle_0, '0', epy_block_0, '0']
+- [blocks_throttle_0, '0', epy_block_0_0, '0']
 - [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '1']
-- [blocks_throttle_0, '0', sat_doppler_corr_0, '0']
-- [sat_doppler_corr_0, '0', blocks_file_sink_0, '0']
-- [sat_doppler_corr_0, '0', qtgui_freq_sink_x_0, '0']
+- [epy_block_0, '0', blocks_file_sink_0_0, '0']
+- [epy_block_0, '0', qtgui_freq_sink_x_0, '2']
+- [epy_block_0_0, '0', blocks_multiply_xx_0, '0']
+- [epy_block_0_0, msgfreq, analog_sig_source_x_0_0, freq]
 
 metadata:
   file_format: 1
