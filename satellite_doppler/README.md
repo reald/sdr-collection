@@ -17,7 +17,6 @@ file (watch for disturbing trailing white spaces after name in tle), start
 time of record (format '2021-01-02 08:09:15') and timezone for it
 (e.g. 'Europe/Berlin').
 
-
 ## Flow graphs for gnuradio-companion:
 
 * sat_doppler_corr_example.grc
@@ -27,3 +26,7 @@ time of record (format '2021-01-02 08:09:15') and timezone for it
     * Method 2 corrects doppler shift internally by using phase rotator
 
 ![Doppler frequency correction](sat_doppler_corr_example.png?raw=true "Doppler frequency correction")
+
+## Installation:
+
+The 2 described blocks are gnuradio embedded python blocks. You can copy from the example flow graph and paste them into your projects.
