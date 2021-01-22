@@ -29,4 +29,4 @@ time of record (format '2021-01-02 08:09:15') and timezone for it
 
 ## Installation:
 
-The 2 described blocks are gnuradio embedded python blocks. You can copy from the example flow graph and paste them into your projects.
+The two described blocks are gnuradio embedded python blocks. You can copy from the example flow graph and paste them into your projects.
