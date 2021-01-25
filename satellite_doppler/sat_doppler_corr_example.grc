@@ -263,7 +263,7 @@ blocks:
       \ for current sat position \"\"\"\n       \n       if ( self.print_debug !=\
       \ 0 and sat_pos != None ):\n           \n          [elev, azim] = self.get_sat_elev_azim(sat_pos)\n\
       \           \n          print( \"{0} / Elevation: {1:.1f} deg / Azimuth: {2:.1f}\
-      \ deg / Distance: {3:.3f} km / Doppler Shift (@{4:.6f} MHz = {5} Hz / Corr {6}\
+      \ deg / Distance: {3:.3f} km / Doppler Shift @{4:.6f} MHz = {5} Hz / Corr {6}\
       \ / Visible: {7}\".format(\n                   self.current_time_utc.astimezone(self.time_zone),\n\
       \                   elev,\n                   azim,\n                   self.get_sat_distance(sat_pos.position_ecef),\n\
       \                   self.rx_freq/1000000,\n                   self.get_doppler_shift(sat_pos,\
@@ -394,7 +394,7 @@ blocks:
       \ \"\"\"\n       \n       if ( self.print_debug != 0 and sat_pos != None ):\n\
       \           \n          [elev, azim] = self.get_sat_elev_azim(sat_pos)\n   \
       \        \n          print( \"{0} / Elevation: {1:.1f} deg / Azimuth: {2:.1f}\
-      \ deg / Distance: {3:.3f} km / Doppler Shift (@{4:.6f} MHz = {5} Hz / Corr {6}\
+      \ deg / Distance: {3:.3f} km / Doppler Shift @{4:.6f} MHz = {5} Hz / Corr {6}\
       \ / Visible: {7}\".format(\n                   self.current_time_utc.astimezone(self.time_zone),\n\
       \                   elev,\n                   azim,\n                   self.get_sat_distance(sat_pos.position_ecef),\n\
       \                   self.rx_freq/1000000,\n                   self.get_doppler_shift(sat_pos,\
