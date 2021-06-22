@@ -25,7 +25,7 @@ Linux User have to run dos2unix on the .tle file before using it!
   * Two methods implemented in embedded python blocks:
     * Method 1 predicts doppler frequency and uses external
       multiplication to correct doppler shift
-    * Method 2 corrects doppler shift internally by using phase rotator
+    * Method 2 corrects doppler shift internally by using phase rotator. More comfortable but quite slow. Performance improvements welcome!
 
 ![Doppler frequency correction](sat_doppler_corr_example.png?raw=true "Doppler frequency correction")
 
