@@ -17,7 +17,7 @@ file (watch for disturbing trailing white spaces after name in tle), start
 time of record (format '2021-01-02 08:09:15') and timezone for it
 (e.g. 'Europe/Berlin').
 
-Linux User have to run dos2unix on the .tle file before using it!
+Linux user have to run dos2unix on the .tle file before using it!
 
 ## Flow graphs for gnuradio-companion:
 
