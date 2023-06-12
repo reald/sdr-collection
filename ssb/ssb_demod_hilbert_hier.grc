@@ -1,6 +1,7 @@
 options:
   parameters:
     author: reald
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -235,7 +236,7 @@ blocks:
     samp_rate: samp_rate
     type: fir_filter_fff
     width: high_pass_transistionw
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
@@ -259,7 +260,7 @@ blocks:
     samp_rate: samp_rate
     type: fir_filter_fff
     width: high_pass_transistionw
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
@@ -294,7 +295,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_taps: numhilberttaps
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
@@ -312,7 +313,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_taps: numhilberttaps
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
